@@ -82,7 +82,6 @@ public class ExportProjectPage extends WizardPage implements ModifyListener,
 	private Label mKeyStoreAliasLabel;
 	private Label mKeyStorePassCodeLabel;
 
-
 	protected ExportProjectPage(ExportProjectWizard wizard) {
 		super("exportCrosswalkApp");
 		mWizard = wizard;
@@ -98,7 +97,9 @@ public class ExportProjectPage extends WizardPage implements ModifyListener,
 		mSettingCanFinish = true;
 		if (!checkPreferenceSettings()) {
 			mSettingCanFinish = false;
-			setMessage("Android SDK or Crosswalk path have not been set correctly. Please go Windwo->Preferences->Crosswalk App to set it up.", WARNING);
+			setMessage("Crosswalk's path has not been set correctly. Please go to Window->"
+					+ "Preferences->Crosswalk App to configure it.",
+					WARNING);
 		}
 		setPageComplete(false);
 	}
@@ -294,12 +295,7 @@ public class ExportProjectPage extends WizardPage implements ModifyListener,
 
 	private boolean checkPreferenceSettings() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		String androidSdkPath = store.getString(Settings.ANDROID_SDK_PATH);
 		String xwalkPath = store.getString(Settings.XWALK_PATH);
-		File androidSdk = new File(androidSdkPath);
-		if (!androidSdk.exists()) {
-			return false;
-		}
 
 		File xwalk = new File(xwalkPath);
 		if (!xwalk.exists()) {
@@ -307,8 +303,8 @@ public class ExportProjectPage extends WizardPage implements ModifyListener,
 		}
 		return true;
 	}
-	@Override
 
+	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible) {
@@ -418,7 +414,6 @@ public class ExportProjectPage extends WizardPage implements ModifyListener,
 
 		CanFinish();
 	}
-
 
 	private void onDestinationChange() {
 		String path = mDestinationPathText.getText().trim();
@@ -549,7 +544,7 @@ public class ExportProjectPage extends WizardPage implements ModifyListener,
 		curLocation = textWidget.getText().trim();
 		if (!curLocation.isEmpty()) {
 			dd.setFilterPath(curLocation);
-		} 
+		}
 
 		dir = dd.open();
 		return dir;

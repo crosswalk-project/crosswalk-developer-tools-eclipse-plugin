@@ -29,8 +29,11 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.xwalk.ide.eclipse.xdt.Activator;
+import org.xwalk.ide.eclipse.xdt.XdtConstants;
 import org.xwalk.ide.eclipse.xdt.XdtPluginLog;
 import org.xwalk.ide.eclipse.xdt.preference.Settings;
 import org.xwalk.ide.eclipse.xdt.wizards.export.ApkParameters;
@@ -53,11 +56,21 @@ public final class ExportHelper {
 		return runResult;
 	}
 
+	public static String getSdkPath() {
+		IPreferencesService service = Platform.getPreferencesService();
+		String qualifier = XdtConstants.ADT_PLUGIN_ID;
+		String key = XdtConstants.PREFS_SDK_DIR;
+		String defaultValue = "";
+		String androidSdkPath = service.getString(qualifier, key, defaultValue,
+				null);
+		return androidSdkPath;
+	}
+
 	public static int generateApk(IProject project, ApkParameters parameters)
 			throws IOException {
 		StringBuilder cmd = new StringBuilder();
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		String androidSdkPath = store.getString(Settings.ANDROID_SDK_PATH);
+		String androidSdkPath = getSdkPath();
 		String xwalkPath = store.getString(Settings.XWALK_PATH);
 		File xwalkDir = new File(xwalkPath);
 		String projectPath = project.getLocation().toFile().getAbsolutePath();

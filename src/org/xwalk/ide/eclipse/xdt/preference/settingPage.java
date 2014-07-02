@@ -41,15 +41,13 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.osgi.framework.Bundle;
 import org.xwalk.ide.eclipse.xdt.Activator;
+import org.xwalk.ide.eclipse.xdt.helpers.ExportHelper;
 
 public class settingPage extends PreferencePage implements
 		IWorkbenchPreferencePage, SelectionListener {
 	private Text mXwalkPathText;
 	private static String sLastXwalkLocation = "";
-	private static String sLastAndroidLocation = "";
 	private Button mXwalkPathBrowseButton;
-	private Text mAndroidPathTxt;
-	private Button mAndroidPathBrowseButton;
 
 	public settingPage() {
 		setTitle("Crosswalk App");
@@ -100,120 +98,91 @@ public class settingPage extends PreferencePage implements
 		androidSettingGroup.setLayout(new GridLayout(1, false));
 
 		Label androidPathLabel = new Label(androidSettingGroup, SWT.NONE);
-		androidPathLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		androidPathLabel.setText("SDK Path:");
-		mAndroidPathTxt = new Text(androidSettingGroup, SWT.BORDER);
-		mAndroidPathTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		mAndroidPathBrowseButton = new Button(androidSettingGroup, SWT.NONE);
-		mAndroidPathBrowseButton.setText("Browse...");
-		mAndroidPathBrowseButton.addSelectionListener(this);
-		mAndroidPathBrowseButton.setEnabled(true);
+		androidPathLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,	false, 1, 1));
+		androidPathLabel.setText("The SDK path can be set in Window->Preferences->Android.\n"
+					+ "Your SDK Path is " + ExportHelper.getSdkPath());
 		initializeValues();
 		return composite;
 	}
 
 	// ---- Implements SelectionListener ----
 
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-			// TODO:
-			Object source = e.getSource();
-			if (source == mXwalkPathBrowseButton) {
-				String dir = promptUserForLocation(getShell(), "XwalkPath", "Select folder for Crosswalk path");
-				if (dir != null) {
-					mXwalkPathText.setText(dir);
-				}
-			}
-			else if (source == mAndroidPathBrowseButton) {
-				String dir = promptUserForLocation(getShell(), "AndroidPath", "Select folder for Android SDK path");
-				if (dir != null) {
-					mAndroidPathTxt.setText(dir);
-				}
+	@Override
+	public void widgetSelected(SelectionEvent e) {
+		// TODO:
+		Object source = e.getSource();
+		if (source == mXwalkPathBrowseButton) {
+			String dir = promptUserForLocation(getShell(), "XwalkPath",
+					"Select folder for Crosswalk path");
+			if (dir != null) {
+				mXwalkPathText.setText(dir);
 			}
 		}
+	}
 
+	private String promptUserForLocation(Shell shell, String forText,
+			String message) {
+		DirectoryDialog dd = new DirectoryDialog(getShell());
+		dd.setMessage(message);
+		String curLocation;
+		String dir;
 
-		private String promptUserForLocation(Shell shell, String forText, String message) {
-			DirectoryDialog dd = new DirectoryDialog(getShell());
-			dd.setMessage(message);
-			String curLocation;
-			String dir;
-
-			if (forText == "XwalkPath") {
-				curLocation = mXwalkPathText.getText().trim();
-				if (!curLocation.isEmpty()) {
-					dd.setFilterPath(curLocation);
-				} else if (sLastXwalkLocation != null) {
-					dd.setFilterPath(sLastXwalkLocation);
-				}
-			} else {
-				curLocation = mAndroidPathTxt.getText().trim();
-				if (!curLocation.isEmpty()) {
-					dd.setFilterPath(curLocation);
-				} else if (sLastAndroidLocation != null) {
-					dd.setFilterPath(sLastAndroidLocation);
-				}
-			}
-			dir = dd.open();
-			if ((dir != null) && (forText == "XwalkPath")) {
-				sLastXwalkLocation = dir;
-			}
-			else {
-				sLastAndroidLocation = dir;
-			}
-			return dir;
-		}
-
-		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
-
-		}
-
-		private void initializeValues () {
-			IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-			if ((store.getString(Settings.XWALK_PATH) == "")||(store.getString(Settings.XWALK_PATH) == null)) {
-				store.setDefault(Settings.XWALK_PATH, System.getProperty("user.home"));
-				sLastXwalkLocation = System.getProperty("user.home");
-			} else {
-				sLastXwalkLocation = store.getString(Settings.XWALK_PATH);
-			}
-
-			if ((store.getString(Settings.ANDROID_SDK_PATH) == "")||(store.getString(Settings.ANDROID_SDK_PATH) == null)) {
-				store.setDefault(Settings.ANDROID_SDK_PATH, System.getProperty("user.home"));
-				sLastAndroidLocation = System.getProperty("user.home");
-			} else {
-				sLastAndroidLocation = store.getString(Settings.ANDROID_SDK_PATH);
-			}
-
-			if (sLastXwalkLocation != "") {
-				mXwalkPathText.setText(sLastXwalkLocation);
-			}
-
-			if (sLastAndroidLocation != "") {
-				mAndroidPathTxt.setText(sLastAndroidLocation);
+		if (forText == "XwalkPath") {
+			curLocation = mXwalkPathText.getText().trim();
+			if (!curLocation.isEmpty()) {
+				dd.setFilterPath(curLocation);
+			} else if (sLastXwalkLocation != null) {
+				dd.setFilterPath(sLastXwalkLocation);
 			}
 		}
+		dir = dd.open();
+		if ((dir != null) && (forText == "XwalkPath")) {
+			sLastXwalkLocation = dir;
+		}
+		return dir;
+	}
 
-		private void storeValues() {
-			IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-			store.setValue(Settings.XWALK_PATH, mXwalkPathText.getText().trim());
-			store.setValue(Settings.ANDROID_SDK_PATH, mAndroidPathTxt.getText().trim());
+	@Override
+	public void widgetDefaultSelected(SelectionEvent e) {
+
+	}
+
+	private void initializeValues() {
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		if ((store.getString(Settings.XWALK_PATH) == "")
+				|| (store.getString(Settings.XWALK_PATH) == null)) {
+			store.setDefault(Settings.XWALK_PATH,
+					System.getProperty("user.home"));
+			sLastXwalkLocation = System.getProperty("user.home");
+		} else {
+			sLastXwalkLocation = store.getString(Settings.XWALK_PATH);
 		}
 
-		private void initializeDefaults() {
-			IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-			System.out.println("store.getDefaultString(Settings.XWALK_PATH):"+store.getDefaultString(Settings.XWALK_PATH));
-			mXwalkPathText.setText(store.getDefaultString(Settings.XWALK_PATH));
-			mAndroidPathTxt.setText(store.getDefaultString(Settings.ANDROID_SDK_PATH));
+		if (sLastXwalkLocation != "") {
+			mXwalkPathText.setText(sLastXwalkLocation);
 		}
 
-		protected void performDefaults () {
-			initializeDefaults();
-			super.performDefaults();
-		}
+	}
 
-		public boolean performOk () {
-			storeValues();
-			return true;
-		}
+	private void storeValues() {
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		store.setValue(Settings.XWALK_PATH, mXwalkPathText.getText().trim());
+	}
+
+	private void initializeDefaults() {
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		System.out.println("store.getDefaultString(Settings.XWALK_PATH):"
+				+ store.getDefaultString(Settings.XWALK_PATH));
+		mXwalkPathText.setText(store.getDefaultString(Settings.XWALK_PATH));
+	}
+
+	protected void performDefaults() {
+		initializeDefaults();
+		super.performDefaults();
+	}
+
+	public boolean performOk() {
+		storeValues();
+		return true;
+	}
 }

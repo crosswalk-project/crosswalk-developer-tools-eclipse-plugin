@@ -18,7 +18,6 @@ package org.xwalk.ide.eclipse.xdt.preference;
 
 public class Settings {
 	public static final String XWALK_PATH = "XWALK_PATH";
-	public static final String ANDROID_SDK_PATH = "ANDROID_SDK_PATH";
 	private Settings() {
 	}
 }

@@ -88,7 +88,7 @@ public class ExportProjectWizard extends Wizard implements IExportWizard {
 
 	private boolean checkPreferenceSettings() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		String androidSdkPath = store.getString(Settings.ANDROID_SDK_PATH);
+		String androidSdkPath = ExportHelper.getSdkPath();
 		String xwalkPath = store.getString(Settings.XWALK_PATH);
 		File androidSdk = new File(androidSdkPath);
 		if (!androidSdk.exists()) {
