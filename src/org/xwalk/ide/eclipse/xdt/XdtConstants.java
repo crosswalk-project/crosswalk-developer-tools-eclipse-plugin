@@ -26,6 +26,10 @@ public class XdtConstants {
 	/** Nature of default Android projects */
 	public final static String NATURE_ID = "org.xwalk.ide.eclipse.xdt.XwalkNature";
 
+	public final static String ADT_PLUGIN_ID = "com.android.ide.eclipse.adt";
+
+	public final static String PREFS_SDK_DIR = ADT_PLUGIN_ID + ".sdk";
+
 	public final static String MANIFEST_PATH = "manifest.json";
 
 	public static final String[] TARGET_FORMATS = { "APK", "XPK" };
