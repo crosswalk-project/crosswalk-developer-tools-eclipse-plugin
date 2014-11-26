@@ -7,8 +7,8 @@ Below dependencies are needed for Crosswalk Developer Tools Eclipse Plugin
 
 *   **Android SDK** for your platform from http://developer.android.com/sdk/index.html
 *   **Eclipse 4.2.2** ,it can be downloaded from http://eclipse.org/ 
-*   Runnable **xwalk-android** distribution from https://download.01.org/crosswalk/releases/
-*   For having a runnable xwalk-android, some steps are required to set up the develop host, [INSTALLING THE DEVELOPMENT TOOLS](https://crosswalk-project.org/#documentation/getting_started/host_setup/Installing-the-dev-tools). Futher detail, please refer [Crosswalk Wiki](http://crosswalk-project.org/#wiki)
+*   **Crosswalk for Android**, available at https://download.01.org/crosswalk/releases/
+    * Make sure your environment is properly setup, as described in the ["host setup" pages in Crosswalk's website](https://crosswalk-project.org/documentation/getting_started.html).
 
 ## Installation ##
 Several simple steps to install the plugin into your Eclipse as following:
@@ -39,7 +39,7 @@ Several simple steps to install the plugin into your Eclipse as following:
 
 ## Usage ##
 
-Configuration for Android SDk and Crosswalk
+Configuration for Android SDK and Crosswalk
  
     Before start using the plugin, it's needed to set up the path for the Android SDK and Crosswalk.
     We provide a very simple way to do that as below:
